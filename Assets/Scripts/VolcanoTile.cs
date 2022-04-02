@@ -47,6 +47,11 @@ public class VolcanoTile : MonoBehaviour
 
     public bool Dig(float amount)
     {
+        if (this.LavaLevel > 0f)
+        {
+            return false;
+        }
+
         if (this.Depth >= 1.0f)
         {
             return false;

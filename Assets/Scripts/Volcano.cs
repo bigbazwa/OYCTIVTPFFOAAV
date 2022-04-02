@@ -81,7 +81,7 @@ public class Volcano : MonoBehaviour
 
             foreach (VolcanoTile lowerNeighbor in tile.LowerOrEqualNeighbors)
             {
-                if (lowerNeighbor.LevelWithLava <= tile.LevelWithLava + this.lavaFlow)
+                if (lowerNeighbor.LevelWithLava <= tile.LevelWithLava/* + this.lavaFlow*/)
                 {
                     if (lowest == null || lowerNeighbor.LevelWithLava < lowest.LevelWithLava)
                     {
@@ -94,9 +94,7 @@ public class Volcano : MonoBehaviour
 
             //float lavaToFlow = Mathf.Min(this.lavaFlow, tile.LavaLevel);
 
-            float lavaToFlow = tile.LavaLevel * 0.25f;
-
-            tile.LavaLevel -= lavaToFlow;
+            
 
 
 
@@ -104,6 +102,15 @@ public class Volcano : MonoBehaviour
 
             if (lowest != null)
             {
+                float overflow = tile.LevelWithLava - lowest.LevelWithLava;
+
+
+                //float lavaToFlow = tile.LavaLevel * 0.25f;
+
+                float lavaToFlow = overflow * this.lavaFlow;
+
+                tile.LavaLevel -= lavaToFlow;
+
                 lowest.LavaLevel += lavaToFlow;
             }
 
