@@ -22,7 +22,7 @@ public class VolcanoTile : MonoBehaviour
         {
             if (this.lavaLevel != value)
             {
-                this.lavaLevel = Mathf.Clamp(value, 0.0f, 2.0f); //Mathf.Min(value, 1.0f);
+                this.lavaLevel = Mathf.Clamp(value, 0.0f, 5.0f); //Mathf.Min(value, 1.0f);
                 this.UpdateLavaLevel();
             }
 
@@ -44,6 +44,24 @@ public class VolcanoTile : MonoBehaviour
     public Volcano Volcano { get; set; }
 
     public List<VolcanoTile> LowerOrEqualNeighbors = new List<VolcanoTile>();
+
+    public bool Dig(float amount)
+    {
+        if (this.Depth >= 1.0f)
+        {
+            return false;
+        }
+        else
+        {
+            this.Depth += amount;
+            if (this.Depth > 1.0f)
+            {
+                this.Depth = 1.0f;
+            }
+            this.UpdateLavaLevel();
+            return true;
+        }
+    }
 
     private void Start()
     {

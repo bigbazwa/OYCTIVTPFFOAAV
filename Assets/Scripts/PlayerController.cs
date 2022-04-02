@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
 
     private PlayerInput input;
 
+    private Volcano volcano;
+
     public float walkSpeed = 5.0f;
 
     // Start is called before the first frame update
@@ -15,6 +17,7 @@ public class PlayerController : MonoBehaviour
     {
         this.characterController = GetComponent<CharacterController>();
         this.input = GetComponent<PlayerInput>();
+        this.volcano = GameObject.FindObjectOfType<Volcano>();
     }
 
     // Update is called once per frame
@@ -23,5 +26,10 @@ public class PlayerController : MonoBehaviour
         float walkAmount = walkSpeed * Time.deltaTime;
         this.characterController.Move(new Vector3(input.HorizontalAxis * walkAmount, -9.81f * Time.deltaTime, input.VerticalAxis * walkAmount));
         //this.characterController.SimpleMove(new Vector3(input.HorizontalAxis * walkSpeed, 0.0f, input.VerticalAxis * walkSpeed));
+
+        if (input.Dig)
+        {
+            this.volcano.Dig(this.transform.position, 2.5f, 0.5f);
+        }
     }
 }

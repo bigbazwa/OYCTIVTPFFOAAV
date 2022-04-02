@@ -45,6 +45,23 @@ public class Volcano : MonoBehaviour
         return this.tiles.FirstOrDefault(tile => tile.TileX == x && tile.TileY == y);
     }
 
+    public void Dig(Vector3 position, float range, float amount)
+    {
+        List<VolcanoTile> tilesInRange = new List<VolcanoTile>();
+
+        foreach (VolcanoTile tile in this.tiles)
+        {
+            float distance = Vector3.Distance(position, tile.transform.position);
+
+            if (distance <= range)
+            {
+                tilesInRange.Add(tile);
+            }
+        }
+
+        tilesInRange.ForEach(tile => tile.Dig(amount));
+    }
+
     private void UpdateLavaFlow()
     {
         List<VolcanoTile> lowerNeighbors = new List<VolcanoTile>();
