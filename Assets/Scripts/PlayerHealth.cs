@@ -37,11 +37,16 @@ public class PlayerHealth : MonoBehaviour
 
     private void OnHurt()
     {
+        
+
         if (this.hurtCooldownTimer > 0.0f)
         {
             // Not hurt.
             return;
         }
+
+        var pc = this.GetComponent<PlayerController>();
+        pc.audioSource.PlayOneShot(pc.hurtSFX);
 
         this.hurtCooldownTimer = this.hurtCooldown;
 

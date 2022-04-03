@@ -35,6 +35,14 @@ public class PlayerController : MonoBehaviour
 
     public GameObject[] FinalScoreTexts;
 
+    public AudioClip jumpSFX;
+
+    public AudioClip digSFX;
+
+    public AudioClip hurtSFX;
+
+    public AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -59,7 +67,8 @@ public class PlayerController : MonoBehaviour
         }
 
         GameObject.FindObjectOfType<LoseSequence>()?.Begin();
-        Destroy(this.gameObject);
+        this.GetComponentsInChildren<Renderer>().Where(x => x.enabled).FirstOrDefault(x => x.enabled = false);
+        Destroy(this.gameObject, 3f);
     }
 
     // Update is called once per frame
@@ -121,6 +130,7 @@ public class PlayerController : MonoBehaviour
             if (this.input.Jump)
             {
                 this.yVelocity = jumpImpulse;
+                this.audioSource.PlayOneShot(this.jumpSFX);
             }
         }
 
@@ -155,6 +165,7 @@ public class PlayerController : MonoBehaviour
             facingVector.y = facingVector.z;
             this.digCooldownTimer = this.digCooldown;
             this.animator.SetTrigger("Dig");
+            this.audioSource.PlayOneShot(this.digSFX);
             if (this.volcano.Dig(this.transform.position + facingVector * 1.5f, 2.5f, 0.25f))
             {
                 this.dirtParticles.Play();
