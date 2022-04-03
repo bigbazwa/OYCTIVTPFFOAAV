@@ -20,6 +20,8 @@ public class Volcano : MonoBehaviour
 
     private float lavaUpdateTimer = 0.0f;
 
+    private int score = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +29,7 @@ public class Volcano : MonoBehaviour
         this.tiles = this.tileBuilder.BuildTiles();
         this.tiles.ForEach(tile => tile.Volcano = this);
         VolcanoNeighborFinder.PopulateLowerNeighborsForTiles(this, this.tiles);
+        VolcanoNeighborFinder.PopulateTreeNeighborsForTiles(this, this.tiles);
     }
 
     // Update is called once per frame
@@ -36,7 +39,12 @@ public class Volcano : MonoBehaviour
         if (this.lavaUpdateTimer >= this.lavaUpdateInterval)
         {
             this.lavaUpdateTimer = 0.0f;
-            this.UpdateLavaFlow();
+
+            if (!this.UpdateLavaFlow())
+            {
+                GameObject.FindObjectOfType<LoseSequence>()?.Begin();
+                this.lavaUpdateInterval /= 4f;
+            }
         }
     }
 
@@ -66,13 +74,35 @@ public class Volcano : MonoBehaviour
         return successfulDig;
     }
 
-    private void UpdateLavaFlow()
+    private bool UpdateLavaFlow()
     {
+        bool anyScoreResourceLeft = false; //TODO: start with false. should check remaining unburned trees
         List<VolcanoTile> lowerNeighbors = new List<VolcanoTile>();
 
         foreach (VolcanoTile tile in this.tiles)
         {
             tile.LavaLevel += tile.LavaFlow;
+
+            if (tile.ScoreResource != null)
+            {
+                anyScoreResourceLeft = true;
+            }
+
+            if (tile.Tree?.OnFire == true)
+            {
+                tile.Tree.UpdateFire();
+
+                foreach (VolcanoTile treeNeighbor in tile.TreeNeighbors)
+                {
+                    treeNeighbor.Tree?.UpdateFire();
+                }
+            }
+
+            if (tile.Tree != null)
+            {
+                this.score += 1; //TODO: move to seperate method that runs at different frequency
+                anyScoreResourceLeft = true;
+            }
 
             if (tile.LavaLevel <= 0.0f)
             {
@@ -97,10 +127,6 @@ public class Volcano : MonoBehaviour
             }
 
             //float lavaToFlow = Mathf.Min(this.lavaFlow, tile.LavaLevel);
-
-            
-
-
 
             //lowerNeighbors.ForEach(neighbor => neighbor.LavaLevel += lavaToFlow / lowerNeighbors.Count);
 
@@ -153,5 +179,9 @@ public class Volcano : MonoBehaviour
                 lowestNeighbor.LavaLevel += lavaFlow;
             }*/
         }
+
+        Debug.Log($"Score: {this.score}");
+
+        return anyScoreResourceLeft;
     }
 }

@@ -16,6 +16,10 @@ public class PlayerController : MonoBehaviour
 
     public float jumpImpulse = 0.75f;
 
+    public float digCooldown = 0.5f;
+
+    private float digCooldownTimer = 0.0f;
+
     public Transform mesh;
 
     public delegate void OnHurt();
@@ -33,6 +37,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerHealth_onDead()
     {
+        GameObject.FindObjectOfType<LoseSequence>()?.Begin();
         Destroy(this.gameObject);
     }
 
@@ -51,7 +56,8 @@ public class PlayerController : MonoBehaviour
 
         if (Physics.Raycast(wantPosition, Vector3.down, out RaycastHit raycastHit, 25f))
         {
-            if (raycastHit.collider.GetComponent<VolcanoTile>() is VolcanoTile volcanoTile)
+            //if (raycastHit.collider.GetComponent<VolcanoTile>() is VolcanoTile volcanoTile)
+            if (raycastHit.collider.tag.Equals("Valid"))
             {
 
             }
@@ -109,10 +115,18 @@ public class PlayerController : MonoBehaviour
         this.characterController.Move(movementVector);
         //this.characterController.SimpleMove(new Vector3(input.HorizontalAxis * walkSpeed, 0.0f, input.VerticalAxis * walkSpeed));
 
-        if (input.Dig)
+        this.digCooldownTimer -= Time.deltaTime;
+
+        if (this.digCooldownTimer <= 0.0f)
+        {
+            this.digCooldownTimer = 0.0f;
+        }
+
+        if (input.Dig && this.digCooldownTimer <= 0.0f)
         {
             Vector3 facingVector = this.mesh.forward;
             facingVector.y = facingVector.z;
+            this.digCooldownTimer = this.digCooldown;
             if (this.volcano.Dig(this.transform.position + facingVector * 1.5f, 2.5f, 0.25f))
             {
                 // If successful dig, put dirt behind.

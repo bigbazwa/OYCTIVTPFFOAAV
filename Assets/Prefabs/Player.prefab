@@ -263,7 +263,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 10
-  jumpImpulse: 0.75
+  jumpImpulse: 0.6
+  digCooldown: 0.25
   mesh: {fileID: 9096825750588691054}
 --- !u!114 &7157519586131826415
 MonoBehaviour:
@@ -290,3 +291,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hurtCooldown: 1
+  StartingHealth: 3

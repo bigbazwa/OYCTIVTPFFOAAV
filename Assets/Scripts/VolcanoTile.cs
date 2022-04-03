@@ -45,6 +45,12 @@ public class VolcanoTile : MonoBehaviour
 
     public List<VolcanoTile> LowerOrEqualNeighbors = new List<VolcanoTile>();
 
+    public List<VolcanoTile> TreeNeighbors = new List<VolcanoTile>();
+
+    public ScoreResource ScoreResource { get; set; }
+
+    public ForestTree Tree;
+
     public bool Dig(float amount)
     {
         if (this.LavaLevel > 0f)
@@ -78,6 +84,13 @@ public class VolcanoTile : MonoBehaviour
         if (this.lavaLevel > 0)
         {
             this.gameObject.GetComponent<Renderer>().material = this.Volcano.lavaMaterial;
+
+            this.ScoreResource?.OnLavaConsumed();
+            this.ScoreResource = null;
+
+            this.Tree?.OnConsumedByLava();
+
+            //TODO: Set tree on fire
         }
         else
         {

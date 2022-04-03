@@ -24,7 +24,7 @@ public class PlayerInput : MonoBehaviour
         this.HorizontalAxis = Input.GetAxisRaw("Horizontal");
         this.VerticalAxis = Input.GetAxisRaw("Vertical");
 
-        this.Dig = Input.GetButtonDown("Fire1") || Input.GetMouseButtonDown(0);
+        this.Dig = Input.GetButton("Fire1") || Input.GetMouseButton(0);
         this.Jump = Input.GetButtonDown("Jump") || Input.GetMouseButtonDown(1);
     }
 }
