@@ -26,5 +26,10 @@ public class PlayerInput : MonoBehaviour
 
         this.Dig = Input.GetButton("Fire1") || Input.GetMouseButton(0);
         this.Jump = Input.GetButtonDown("Jump") || Input.GetMouseButtonDown(1);
+
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 }

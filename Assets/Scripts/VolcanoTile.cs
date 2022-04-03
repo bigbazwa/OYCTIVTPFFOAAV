@@ -53,7 +53,7 @@ public class VolcanoTile : MonoBehaviour
 
     public bool Dig(float amount)
     {
-        if (this.LavaLevel > 0f)
+        if (this.LavaLevel > 0f || this.Tree != null)
         {
             return false;
         }

@@ -65,6 +65,7 @@ public class VolcanoTileBuilder : MonoBehaviour
                 if (Mathf.PerlinNoise(i * forestPerlinNoiseScale, j * forestPerlinNoiseScale) >= forestThreshold + (newTile.Height + 11.0f) / 160.0f)
                 {
                     GameObject treeTile = Instantiate(treeTilePrefab, newTile.transform.position + Vector3.back + Vector3.up * 1.0f, Quaternion.identity);
+                    treeTile.transform.Rotate(Vector3.up, Random.Range(0.0f, 360.0f));
                     newTile.Tree = treeTile.GetComponent<ForestTree>();
                     newTile.Tree.Tile = newTile;
                 }

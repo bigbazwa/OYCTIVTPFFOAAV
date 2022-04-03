@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,8 +24,16 @@ public class PlayerController : MonoBehaviour
 
     public Transform mesh;
 
+    public Animator animator;
+
+    public ParticleSystem dirtParticles;
+
     public delegate void OnHurt();
     public static event OnHurt onHurt;
+
+    public GameObject[] ScoreTexts;
+
+    public GameObject[] FinalScoreTexts;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +47,17 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerHealth_onDead()
     {
+        int finalScore = this.volcano.score;
+
+        this.ScoreTexts.ToList().ForEach(x => x.SetActive(false));
+        this.FinalScoreTexts.ToList().ForEach(x => x.SetActive(true));
+        this.FinalScoreTexts[1].GetComponent<Text>().text = $"{finalScore}";
+
+        if (finalScore > PlayerPrefs.GetInt($"HS{this.volcano.LevelId}", 0))
+        {
+            PlayerPrefs.SetInt($"HS{this.volcano.LevelId}", finalScore);
+        }
+
         GameObject.FindObjectOfType<LoseSequence>()?.Begin();
         Destroy(this.gameObject);
     }
@@ -51,6 +72,8 @@ public class PlayerController : MonoBehaviour
         {
             this.mesh.LookAt(this.transform.position + movementVector);
         }
+
+        
 
         Vector3 wantPosition = this.transform.position + movementVector;
 
@@ -70,6 +93,8 @@ public class PlayerController : MonoBehaviour
         {
             movementVector = Vector3.zero;
         }
+
+        this.animator.SetFloat("Movement", movementVector.magnitude);
 
         bool isGrounded = false;
 
@@ -99,6 +124,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        this.animator.SetBool("Falling", !isGrounded);
+
 
         if (yVelocity > 0.0f)
         {
@@ -127,11 +154,19 @@ public class PlayerController : MonoBehaviour
             Vector3 facingVector = this.mesh.forward;
             facingVector.y = facingVector.z;
             this.digCooldownTimer = this.digCooldown;
+            this.animator.SetTrigger("Dig");
             if (this.volcano.Dig(this.transform.position + facingVector * 1.5f, 2.5f, 0.25f))
             {
+                this.dirtParticles.Play();
                 // If successful dig, put dirt behind.
                 this.volcano.Dig(this.transform.position - facingVector * 1.5f, 2.0f, -0.1f);
             }
         }
+    }
+
+    public void OnHitByBoulder()
+    {
+        this.yVelocity = this.jumpImpulse / 2.0f;
+        onHurt?.Invoke();
     }
 }

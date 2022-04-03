@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(VolcanoTileBuilder))]
 public class Volcano : MonoBehaviour
 {
+    public string LevelId = "Level";
+
     public Material volcanoMaterial;
 
     public Material lavaMaterial;
@@ -14,13 +17,23 @@ public class Volcano : MonoBehaviour
 
     public float lavaFlow = 0.75f;
 
+    public GameObject boulderPrefab;
+
+    public float[] boulderTimes;
+
+    public float[] boulderAngles;
+
+    private int boulderIndex;
+
     private VolcanoTileBuilder tileBuilder;
 
     private List<VolcanoTile> tiles;
 
     private float lavaUpdateTimer = 0.0f;
 
-    private int score = 0;
+    public int score = 0;
+
+    public Text scoreText;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +43,8 @@ public class Volcano : MonoBehaviour
         this.tiles.ForEach(tile => tile.Volcano = this);
         VolcanoNeighborFinder.PopulateLowerNeighborsForTiles(this, this.tiles);
         VolcanoNeighborFinder.PopulateTreeNeighborsForTiles(this, this.tiles);
+
+        StartCoroutine(this.BoulderCoroutine());
     }
 
     // Update is called once per frame
@@ -143,45 +158,29 @@ public class Volcano : MonoBehaviour
 
                 lowest.LavaLevel += lavaToFlow;
             }
-
-            //lowerNeighbors.ForEach(neighbor => neighbor.LavaFlow = tile.LavaFlow / 2.0f);
-
-            // Remember, higher depth = lower.
-
-            /*tile.LavaLevel += tile.LavaFlow;
-
-            lowerNeighbors.Clear();
-
-            VolcanoTile lowestNeighbor = tile.LowerOrEqualNeighbors.FirstOrDefault();
-
-            foreach (VolcanoTile lowerNeighbor in tile.LowerOrEqualNeighbors)
-            {
-                // Find neighboring lower tiles that have a lower depth than the current tiles depth plus its lava level.
-                if (lowerNeighbor.Depth < tile.Depth + tile.LavaLevel)
-                {
-                    lowerNeighbors.Add(lowerNeighbor);
-                }
-
-                if (lowerNeighbor.Depth < lowestNeighbor?.Depth)
-                {
-                    lowestNeighbor = lowerNeighbor;
-                }
-            }
-
-            float lavaToFlow = tile.LavaLevel * this.lavaFlow;
-
-            tile.LavaLevel -= lavaToFlow;
-
-            //lowerNeighbors.ForEach(neighbor => neighbor.LavaLevel += lavaToFlow / lowerNeighbors.Count);
-
-            if (lowestNeighbor != null)
-            {
-                lowestNeighbor.LavaLevel += lavaFlow;
-            }*/
         }
 
-        Debug.Log($"Score: {this.score}");
+        this.scoreText.text = $"{this.score}";
 
         return anyScoreResourceLeft;
+    }
+
+    private IEnumerator BoulderCoroutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(this.boulderTimes[this.boulderIndex]);
+
+            GameObject boulder = Instantiate(this.boulderPrefab, new Vector3(-0.11f, 25.98f, 71.33f), Quaternion.identity);
+
+            boulder.GetComponent<Rigidbody>().AddForce(new Vector3(this.boulderAngles[this.boulderIndex] / 25.0f, 0.5f, 0.0f), ForceMode.Impulse);
+
+            Destroy(boulder, 15.0f);
+
+            if (++this.boulderIndex >= this.boulderTimes.Length)
+            {
+                this.boulderIndex = 0;
+            }
+        }
     }
 }

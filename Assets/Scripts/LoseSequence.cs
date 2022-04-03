@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LoseSequence : MonoBehaviour
 {
@@ -35,7 +36,9 @@ public class LoseSequence : MonoBehaviour
     {
         Debug.Log("Begin Lose Sequence");
         this.inProgress = true;
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(5.0f);
         Debug.Log("Begin End Sequence");
+
+        SceneManager.LoadScene(0);
     }
 }

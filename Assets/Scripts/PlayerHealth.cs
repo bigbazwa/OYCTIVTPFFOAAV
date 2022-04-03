@@ -12,6 +12,8 @@ public class PlayerHealth : MonoBehaviour
 
     public int Health { get; private set; } = 3;
 
+    public GameObject[] healthHearts;
+
     public delegate void OnDead();
     public static event OnDead onDead;
 
@@ -47,7 +49,13 @@ public class PlayerHealth : MonoBehaviour
 
         if (this.Health <= 0)
         {
+            this.Health = 0;
             onDead?.Invoke();
+        }
+
+        for (int i = 0; i < this.StartingHealth; i++)
+        {
+            this.healthHearts[i].SetActive(i < this.Health);
         }
     }
 }
