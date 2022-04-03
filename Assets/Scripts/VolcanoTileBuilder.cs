@@ -26,7 +26,7 @@ public class VolcanoTileBuilder : MonoBehaviour
                 }
 
                 GameObject newTileObject = Instantiate(volcanoTilePrefab, sidePlane, false);
-                float z = (Mathf.PerlinNoise(i * perlinNoiseScale, j * perlinNoiseScale) / 2.0f) - 1.0f;
+                float z = (Mathf.PerlinNoise(i * perlinNoiseScale, j * perlinNoiseScale) / 2.5f) - 1.0f;
                 newTileObject.GetComponent<Transform>().Translate(new Vector3(i, j, z), Space.Self);
                 
                 newTileObject.name = $"Volcano tile i: {i},\tj: {j},\tdepth: {z}";

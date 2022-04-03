@@ -89,9 +89,9 @@ public class VolcanoTile : MonoBehaviour
         this.transform.localPosition = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y, newZ);
     }
 
-    private void OnMouseDown()
+    /*private void OnMouseDown()
     {
         this.Depth = 1.0f;
         this.UpdateLavaLevel();
-    }
+    }*/
 }

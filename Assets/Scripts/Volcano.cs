@@ -45,7 +45,7 @@ public class Volcano : MonoBehaviour
         return this.tiles.FirstOrDefault(tile => tile.TileX == x && tile.TileY == y);
     }
 
-    public void Dig(Vector3 position, float range, float amount)
+    public bool Dig(Vector3 position, float range, float amount)
     {
         List<VolcanoTile> tilesInRange = new List<VolcanoTile>();
 
@@ -59,7 +59,11 @@ public class Volcano : MonoBehaviour
             }
         }
 
-        tilesInRange.ForEach(tile => tile.Dig(amount));
+        bool successfulDig = false;
+
+        tilesInRange.ForEach(tile => successfulDig |= tile.Dig(amount));
+
+        return successfulDig;
     }
 
     private void UpdateLavaFlow()

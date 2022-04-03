@@ -10,6 +10,8 @@ public class PlayerInput : MonoBehaviour
 
     public bool Dig { get; private set; }
 
+    public bool Jump { get; private set; }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +24,7 @@ public class PlayerInput : MonoBehaviour
         this.HorizontalAxis = Input.GetAxisRaw("Horizontal");
         this.VerticalAxis = Input.GetAxisRaw("Vertical");
 
-        this.Dig = Input.GetButtonDown("Jump");
+        this.Dig = Input.GetButtonDown("Fire1") || Input.GetMouseButtonDown(0);
+        this.Jump = Input.GetButtonDown("Jump") || Input.GetMouseButtonDown(1);
     }
 }
