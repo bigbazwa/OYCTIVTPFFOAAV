@@ -25,6 +25,15 @@ public class VolcanoTileBuilder : MonoBehaviour
 
     public List<VolcanoTile> BuildTiles()
     {
+        bool isRandom = GameObject.FindObjectOfType<Volcano>().LevelId == "Level3";
+
+        if (isRandom)
+        {
+            this.perlinNoiseScale = Random.Range(0.1f, 24.0f);
+            this.forestPerlinNoiseScale = Random.Range(0.1f, 24.0f);
+            this.forestThreshold = Random.Range(0.5f, 0.9f);
+        }
+
         List<VolcanoTile> tiles = new List<VolcanoTile>();
 
         for (int i = 0; i < height; i++)

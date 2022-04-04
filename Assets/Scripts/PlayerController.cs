@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem dirtParticles;
 
     public delegate void OnHurt();
-    public static event OnHurt onHurt;
+    public event OnHurt onHurt;
 
     public GameObject[] ScoreTexts;
 
@@ -43,6 +43,8 @@ public class PlayerController : MonoBehaviour
 
     public AudioSource audioSource;
 
+    private bool dead = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,11 +52,20 @@ public class PlayerController : MonoBehaviour
         this.input = GetComponent<PlayerInput>();
         this.volcano = GameObject.FindObjectOfType<Volcano>();
 
-        PlayerHealth.onDead += PlayerHealth_onDead;
+        this.GetComponent<PlayerHealth>().onDead += PlayerHealth_onDead;
+
+        //PlayerHealth.onDead 
     }
 
     private void PlayerHealth_onDead()
     {
+        if (this.dead)
+        {
+            return;
+        }
+
+        this.dead = true;
+
         int finalScore = this.volcano.score;
 
         this.ScoreTexts.ToList().ForEach(x => x.SetActive(false));

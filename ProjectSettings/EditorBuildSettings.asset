@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/VolcanoProtoScene.unity
     guid: ab7f9b52e374fbf4394316e000efb471
+  - enabled: 1
+    path: Assets/Scenes/volcanohard.unity
+    guid: 086b0d1688ab4fd44ab1f5d9b37cc624
+  - enabled: 1
+    path: Assets/Scenes/volcanorandom.unity
+    guid: 449599861c980df4a92f14f65520e292
   m_configObjects: {}

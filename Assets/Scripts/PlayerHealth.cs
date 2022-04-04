@@ -15,13 +15,14 @@ public class PlayerHealth : MonoBehaviour
     public GameObject[] healthHearts;
 
     public delegate void OnDead();
-    public static event OnDead onDead;
+    public event OnDead onDead;
 
     // Start is called before the first frame update
     void Start()
     {
         this.Health = this.StartingHealth;
-        PlayerController.onHurt += OnHurt;
+        this.GetComponent<PlayerController>().onHurt += OnHurt;
+        //PlayerController.onHurt += OnHurt;
     }
 
     // Update is called once per frame
@@ -45,8 +46,8 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
 
-        var pc = this.GetComponent<PlayerController>();
-        pc.audioSource.PlayOneShot(pc.hurtSFX);
+        var pc = this?.GetComponent<PlayerController>();
+        pc?.audioSource.PlayOneShot(pc.hurtSFX);
 
         this.hurtCooldownTimer = this.hurtCooldown;
 

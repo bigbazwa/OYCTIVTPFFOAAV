@@ -31,5 +31,10 @@ public class PlayerInput : MonoBehaviour
         {
             Application.Quit();
         }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            AudioListener.pause = !AudioListener.pause;
+        }
     }
 }

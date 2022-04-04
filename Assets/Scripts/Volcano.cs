@@ -35,6 +35,8 @@ public class Volcano : MonoBehaviour
 
     public Text scoreText;
 
+    public ParticleSystem treeSmoke;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -106,6 +108,16 @@ public class Volcano : MonoBehaviour
             if (tile.Tree?.OnFire == true)
             {
                 tile.Tree.UpdateFire();
+
+                if (tile.Tree != null)
+                {
+                    if (Random.Range(0.0f, 1.0f) > 0.75f)
+                    {
+                        this.treeSmoke.transform.position = tile.Tree.transform.position;
+                        this.treeSmoke.Play();
+                    }
+                }
+                
 
                 foreach (VolcanoTile treeNeighbor in tile.TreeNeighbors)
                 {
